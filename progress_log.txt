@@ -1,0 +1,99 @@
+
+
+* Start with mkdir crawl; git init; mkvirtualenv crawl
+
+* Go to scrapy homepage -> pip install scrapy, copy example BlogSpider to
+  local file
+
+* Run scrapy spider my_file.py and try understand the output
+  What is the difference between crawled and scraped?
+  Crawling means walking through the pages, scrape means extracting data from
+  a page. Ok.
+  At the end there are some stats.
+  
+* The scrapy example uses a css selector as argument for a css method on a
+  response object (class 'scrapy.http.response.html.HtmlResponse', scrapy
+  stuff).  
+  The css method returns a object of class
+  'scrapy.selector.unified.SelectorList', which inherits from list and has
+  some methods like "re" and "extract"
+
+* Lets look a quoka.
+  There are the filters on the left. If I click one, the url does not show any
+  query parameters, like "...?city=Berlin", scrapy must help me.
+
+* First do the crawling, scraping the data is a separate task.
+
+* The filter links looks like:
+  <a rel="nofollow" href="javascript:qsn.set('comm','1',1);">nur Gewerbliche</a>
+
+  <a title="'Büros, Gewerbeflächen' Kleinanzeigen aus Berlin" onclick="qsn.changeCity('111756',25, this);
+   return false;" href="/immobilien/bueros-gewerbeflaechen/berlin/cat_27_2710_ct_111756.html">Berlin</a>
+  
+  qsn seems to be a "QSN Javascript Websocket Client for Node.js and HTML5 Browsers."
+  Not important.
+
+  Pagination links look like:
+  <a class="t-pgntn-blue" data-qng-page="5" href="/kleinanzeigen/cat_27_2710_ct_0_page_5.html">5</a>
+
+  ct means obviously city, 111756 is the id of berlin
+  http://www.quoka.de/immobilien/bueros-gewerbeflaechen/berlin/cat_27_2710_ct_111756.html
+
+* Cities and pages seem to be straightforward to find.
+  Find the city ids, get the number of pages and go through the pages with the links like this:
+  "<a class="t-pgntn-blue" data-qng-page="2" href="/kleinanzeigen/cat_27_2710_ct_111756_page_2.html">2</a>"
+
+* The filter "nur Angebote" seems to be more tricky still.
+  When clicking on it, firebug show me a POST-request to 
+  http://www.quoka.de/immobilien/bueros-gewerbeflaechen/
+  or when there is city selected
+  http://www.quoka.de/immobilien/bueros-gewerbeflaechen/berlin/cat_27_2710_ct_111756.html
+  with a lot of interesting POST-parameters. Maybe I can use them.
+
+* In order to get started lets concentrate on crawling the cities/pages first and deal with the "nur
+  Angebote" filter later.
+
+* Even before that, get the total number of properties.
+  The TotalSpider does the job. Still have to filter out the "Gesuche"
+
+* Back to the crawler. Set css filter and regex for cities, create callback that loops over the pages
+  The first page in pagination has different url pattern than the following ones.
+  Use css selector to distinguish between "Partner-Anzeigen" and regular ads.
+  And then another callback
+
+* Now create a MySQL table with all the fields given in the pdf. Do it with
+  MySQL-python -> storage.py
+
+* Use Items and ItemLoader for the data. First do the regular ads.
+  ItemLoader returns lists, the docs say something about
+  default_output_processors
+
+* Need to create a MysqlStoragePipeline
+  And yes, there are some rows in the database :)
+
+* Make use of scrapy.Field(input_processor=...) in order to clean the data
+
+* Back to the filters. Make a POST-request to http://www.quoka.de/immobilien/bueros-gewerbeflaechen/
+  with parameter "classtype" = "of" sets the "nur Angebote" filter.
+  Additionally "comm" = 0 or 1 sets "nur Private" or "nur Gewerbe".
+
+* Now I have to deal with the duplicate filter, because the urls for comm =
+  0 or 1 are the same. -> set dont_filter=True for all parse functions, except
+  parse_property (these have to be unique)
+  Send comm value in meta dict down the chain
+
+* Running into connection timeouts, maybe I crawl too much. Perhaps I need to
+  introduce a timeout somewhere
+
+* The big stuff is complete, now polish the result
+  - The css selector for "Partner-Anzeigen" doesn't seem ok
+  - I'm missing some results, have only 2829
+    > select Stadt, count(*) from quoka group by Stadt;
+    gives 875 cities
+    > select count(*) from quoka where Stadt like "Berlin%"; 
+    227
+    Maybe the timeouts, or there is a bug, or 2829 is the real number..
+    Next run 3298
+
+* How can there be duplicates like this?!
+  DEBUG: Filtered duplicate request: <GET http://www.quoka.de/qpi/immobilien/bueros-gewerbeflaechen/c2710a157428953/klein-fein-mein.html>

@@ -1,0 +1,75 @@
+scrapy dependencies:
+Successfully installed
+Twisted-15.4.0
+cffi-1.2.1
+characteristic-14.3.0
+cryptography-1.0.1
+cssselect-0.9.1
+enum34-1.0.4
+idna-2.0
+ipaddress-1.0.14
+lxml-3.4.4
+pyOpenSSL-0.15.1
+pyasn1-0.1.8
+pyasn1-modules-0.0.7
+pycparser-2.14
+queuelib-1.4.2
+scrapy-1.0.3
+service-identity-14.0.0
+six-1.9.0
+w3lib-1.12.0
+zope.interface-4.1.2
+
+<class 'scrapy.http.response.html.HtmlResponse'>
+['_DEFAULT_ENCODING'
+'body', 'body_as_unicode', 'copy', 'css', 'encoding', 'flags', 'headers', 'meta', 'replace', 'request', 'selector'
+'status', 'url', 'urljoin', 'xpath']
+
+
+adnolist	
+146740274,147991043,143971271,157484951,126672265,128996239,128883233,128648892,129202797,133183958,149329826
+,156332697,156949675,155903046,141395368,141694691,141495102,141495103,141797101,145174802
+adsource	
+catid	27_2710
+city	Berlin
+citycheck	Berlin
+citydisp	
+cityerr	
+cityid	111756
+cityname	Berlin
+classtype	of
+comm	all
+customerdisp	
+detailgeosearch	true
+dispads	20
+label	
+logref	
+mask	default
+mode	search
+notepageno	1
+only	
+pageno	1
+pndu	/kleinanzeigen/cat_27_2710_ct_111756_page_2.html
+pnno	1
+pntp	13
+pnur	/immobilien/bueros-gewerbeflaechen/berlin/cat_27_2710_ct_111756.html
+pnuu	/immobilien/bueros-gewerbeflaechen/berlin/cat_27_2710_ct_111756.html
+price	
+pricelow	von
+pricetop	bis
+radius	25
+result	small
+search1	
+search2	
+searchbool	and
+searchbutton	true
+searchhelp	
+showallresults	false
+showmorecatlink	true
+sorting	adsort
+suburb	
+suburbid	0
+tlc	1
+vtlat	5846
+vtlong	907
+zip

@@ -1,0 +1,73 @@
+adnolist=157540279,157190971,157769796,157684954,138724963,138349639,149014387,157021614,157342373,156514316,157542861,156891738,157734036,157733358,157726329,157726327,156894813,116629536,118355606,153471111,157673790,148043731
+adsource=
+catid=27_2710
+city=
+citycheck=
+citydisp=
+cityerr=
+cityid=0
+cityname=
+classtype=of
+comm=all
+customerdisp=
+detailgeosearch=true
+dispads=20
+label=
+logref=
+mask=default
+mode=search
+notepageno=1
+only=
+pageno=1
+pndu=/kleinanzeigen/cat_27_2710_ct_0_page_2.html
+pnno=1
+pntp=277
+pnur=/immobilien/bueros-gewerbeflaechen/
+pnuu=/immobilien/bueros-gewerbeflaechen/
+price=
+pricelow=von
+pricetop=bis
+radius=25
+result=small
+search1=
+search2=
+searchbool=and
+searchbutton=true
+searchhelp=
+showallresults=false
+showmorecatlink=true
+sorting=adsort
+suburb=
+suburbid=0
+tlc=2
+vtlat=
+vtlong=
+zip=
+
+
+    "catid": "27_2710",
+    "cityid": "0",
+    "classtype": "of",
+    "comm": "all",
+    "detailgeosearch": "true",
+    "dispads": "20",
+    "mask": "default",
+    "mode": "search",
+    "notepageno": "1",
+    "pageno": "1",
+    "pndu": "/kleinanzeigen/cat_27_2710_ct_0_page_2.html",
+    "pnno": "1",
+    "pntp": "277",
+    "pnur": "/immobilien/bueros-gewerbeflaechen/",
+    "pnuu": "/immobilien/bueros-gewerbeflaechen/",
+    "pricelow": "von",
+    "pricetop": "bis",
+    "radius": "25",
+    "result": "small",
+    "searchbool": "and",
+    "searchbutton": "true",
+    "showallresults": "false",
+    "showmorecatlink": "true",
+    "sorting": "adsort",
+    "suburbid": "0",
+    "tlc": "2",
