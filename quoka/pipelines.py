@@ -11,6 +11,37 @@ import MySQLdb as mdb
 
 from quoka.storage import get_connection
 
+class StatsPipeline(object):
+
+    def __init__(self):
+        self.con = get_connection("crawl")
+        self.cur = self.con.cursor()
+
+    def process_item(self, item, spider):
+
+        params = (
+            item.get("commercial"),
+            item.get("city_category")
+        )
+        try:
+            self.cur.execute(
+                """
+                INSERT INTO stats (
+                    commercial,
+                    city_category
+                ) VALUES (
+                    %s, %s
+                )
+
+                """,
+                params
+            )
+            self.con.commit()
+        except mdb.Error, e:
+            print "Error %d: %s" % (e.args[0], e.args[1])
+
+        return item
+
 
 class MySQLStoragePipeline(object):
 
@@ -32,7 +63,8 @@ class MySQLStoragePipeline(object):
             item.get("created"),
             item.get("url"),
             item.get("commercial"),
-            item.get("advertiser_id")
+            item.get("advertiser_id"),
+            item.get("property_type")
         )
 
         try:
@@ -50,9 +82,10 @@ class MySQLStoragePipeline(object):
                     erzeugt_am,
                     url,
                     Gewerblich,
-                    Anbieter_Id
+                    Anbieter_Id,
+                    Immobilientyp
                 ) VALUES (
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                 )
 
                 """,

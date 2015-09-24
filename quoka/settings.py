@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = 'quoka.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'quoka (+http://www.yourdomain.com)'
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:40.0) Gecko/20100101 Firefox/40.0"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
@@ -63,6 +63,7 @@ NEWSPIDER_MODULE = 'quoka.spiders'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    'quoka.pipelines.StatsPipeline': 200,
     'quoka.pipelines.MySQLStoragePipeline': 300,
 }
 
@@ -85,5 +86,6 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-LOG_LEVEL = 'INFO'
+#LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 DUPEFILTER_DEBUG = True

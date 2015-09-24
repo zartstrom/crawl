@@ -26,6 +26,7 @@ def get_cursor(database=''):
 
 
 def create_database():
+    print "create database crawl"
     cursor = get_cursor()
     query = """
         CREATE DATABASE IF NOT EXISTS crawl CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -35,6 +36,7 @@ def create_database():
 
 
 def create_table():
+    print "create table quoka"
     cursor = get_cursor("crawl")
     query = """
     CREATE TABLE IF NOT EXISTS quoka (
@@ -74,6 +76,39 @@ def create_table():
     cursor.execute(query)
 
 
+def create_table_stats():
+    print "create table stats"
+    cursor = get_cursor("crawl")
+    query = """
+    CREATE TABLE IF NOT EXISTS stats (
+        id INT AUTO_INCREMENT NOT NULL,
+        commercial INT,
+        city_category VARCHAR(120),
+        PRIMARY KEY (id)
+    );
+    """
+
+    cursor.execute(query)
+
+
+def drop_database():
+    print "drop database crawl"
+    cursor = get_cursor()
+    query = """
+    DROP DATABASE crawl
+    """
+
+    cursor.execute(query)
+
+
+def prepare_database():
+    drop_database()
+    create_database()
+    create_table()
+    create_table_stats()
+
+
 if __name__ == "__main__":
     create_database()
     create_table()
+    create_table_stats()

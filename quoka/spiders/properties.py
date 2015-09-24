@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+from collections import defaultdict
 from datetime import date
 import json
 import re
@@ -63,7 +64,7 @@ POST_DATA = {
     "result": "small",
     "searchbool": "and",
     "searchbutton": "true",
-    "showallresults": "false",
+    "showallresults": "true",  # before was 'false'
     "showmorecatlink": "true",
     "sorting": "adsort",
     "suburbid": "0",
@@ -78,6 +79,9 @@ class PropertiesSpider(scrapy.Spider):
         "http://www.quoka.de/immobilien/bueros-gewerbeflaechen/"
     ]
 
+    def __init__(self):
+        #self.stats = defaultdict(int)  # stats
+        super(PropertiesSpider, self).__init__()
 
     def parse(self, response):
         """set filters in post data
@@ -88,21 +92,31 @@ class PropertiesSpider(scrapy.Spider):
         post parameter comm is in ["all", 0, 1],
         which correspond to "Keine Einschränkung", "nur Private", "nur Gewerbliche"
         """
+        meta = {
+            "property_type": "Büros, Gewerbeflächen"
+        }
+
         for commercial in [0, 1]:
             POST_DATA["comm"] = commercial
             body = json.dumps(POST_DATA)
+            meta["commercial"] = commercial
 
             url = self.start_urls[0]
 
             yield scrapy.Request(
-                url, self.parse_cities, meta={"commercial": commercial}, method="POST", body=body, dont_filter=True)
+                url, self.parse_cities, meta=meta, method="POST", body=body, dont_filter=True)
 
     def parse_cities(self, response):
         """crawl cities"""
 
         pattern_city_href = r".*gewerbeflaechen/\w+/cat_27_2710_ct_\d+.html"
+        #pattern_city_href = r".*gewerbeflaechen/koeln/cat_27_2710_ct_\d+.html"
 
         for url in response.css("div .cnt ul li ul li a::attr(\"href\")").re(pattern_city_href):  # [:1]:
+            pattern = r".*gewerbeflaechen/(\w+)/cat_27_2710_ct_\d+.html"
+            city_category = re.match(pattern, url).group(1)  # for stats
+            response.meta["city_category"] = city_category
+
             yield scrapy.Request(
                 response.urljoin(url), self.parse_pages,
                 meta=response.meta,
@@ -150,7 +164,9 @@ class PropertiesSpider(scrapy.Spider):
             loader = PropertyLoader(item=PropertyItem(), response=response)
             #loader.add_css("header", box.css("h3::text"))
             loader.add_value("advertiser_id", "Immobilienscout24")
-            loader.add_value("commercial", response.meta["commercial"])
+            loader.add_value("commercial", response.meta.get("commercial"))
+            loader.add_value("property_type", response.meta.get("property_type"))
+            loader.add_value("city_category", response.meta.get("city_category"))  # stats
 
             item = loader.load_item()
             yield item
@@ -170,10 +186,12 @@ class PropertiesSpider(scrapy.Spider):
         loader.add_css("city", "div.location span.address span.locality::text")
         loader.add_css("obid", "div.date-and-clicks > strong:nth-child(1)")
         loader.add_css("ad_created", "div.date-and-clicks::text")
-        loader.add_value("phone", "110")
+        loader.add_css("phone", "ul.contacts > li > span:nth-child(2)::text")
         loader.add_value("created", date.today())
         loader.add_value("url", response.url)
-        loader.add_value("commercial", response.meta["commercial"])
+        loader.add_value("commercial", response.meta.get("commercial"))
+        loader.add_value("property_type", response.meta.get("property_type"))
+        loader.add_value("city_category", response.meta.get("city_category"))  # stats
 
         item = loader.load_item()
         return item

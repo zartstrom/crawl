@@ -10,7 +10,7 @@ import re
 
 import scrapy
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import Join, MapCompose, TakeFirst
+from scrapy.loader.processors import MapCompose, TakeFirst
 
 
 class PropertyLoader(ItemLoader):
@@ -24,8 +24,9 @@ def trim(string):
         return result
     return None
 
+
 def only_digits(string):
-    result = re.sub("\D", "", string)
+    result = re.sub(r"\D", "", string)
     return result
 
 
@@ -39,7 +40,6 @@ def parse_date(string):
 
     except ValueError:
         return None
-
 
 
 class PropertyItem(scrapy.Item):
@@ -58,3 +58,5 @@ class PropertyItem(scrapy.Item):
     url = scrapy.Field()
     commercial = scrapy.Field()
     advertiser_id = scrapy.Field()
+    property_type = scrapy.Field()
+    city_category = scrapy.Field()

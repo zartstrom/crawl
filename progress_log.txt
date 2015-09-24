@@ -97,3 +97,48 @@
 
 * How can there be duplicates like this?!
   DEBUG: Filtered duplicate request: <GET http://www.quoka.de/qpi/immobilien/bueros-gewerbeflaechen/c2710a157428953/klein-fein-mein.html>
+
+* Todolist:
+  - Find "Partner-Anzeigen" correctly; then add visible data like header
+  - Get number of objects right
+  - Phone number and property type
+
+* added property type "Büros, Gewerbeflächen"
+
+* try POST parameter showallresults='true', still a third of the 5k properties
+  are missing. Where should they be?! (stats created by StatsPipeline)
+
+MariaDB [crawl]> select city_category, count(*) from stats group by city_category;
++------------------+----------+
+| city_category    | count(*) |
++------------------+----------+
+| berlin           |      383 |
+| bonn             |      132 |
+| bremen           |       67 |
+| dortmund         |      191 |
+| dresden          |       77 |
+| duesseldorf      |      126 |
+| frankfurt        |      247 |
+| hamburg          |      136 |
+| hannover         |      121 |
+| karlsruhe        |      161 |
+| koeln            |      111 |
+| leipzig          |       71 |
+| ludwigshafen     |      260 |
+| mannheim         |       94 |
+| moenchengladbach |      184 |
+| muenchen         |      217 |
+| nuernberg        |      125 |
+| stuttgart        |      209 |
+| wiesbaden        |      180 |
+| wuppertal        |      217 |
++------------------+----------+
+ 
+And too much "Gewerbliche" ads
+MariaDB [crawl]> select commercial, count(*) from stats group by commercial;
++------------+----------+
+| commercial | count(*) |
++------------+----------+
+|          0 |     2020 |
+|          1 |     1785 |
++------------+----------+
